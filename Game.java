@@ -37,6 +37,13 @@ public class Game {
            listC++;
         }
 
+        //bools represent green dots 
+        //ex: if p1 has a superset of p2s numbers then p1_p2 = true
+        boolean p1_p2, p1_p3, p1_p4 = false;
+        boolean p2_p1, p2_p3, p2_p4 = false;
+        boolean p3_p1, p3_p2, p3_p4 = false;
+        boolean p4_p1, p4_p2, p4_p3 = false;
+    
 
 
         //if players turn allow them to select a number between 1-20 
@@ -66,6 +73,20 @@ public class Game {
                 // if no win continue on
                 if(pnum <= 20 & pnum >0 & !p1num.contains(pnum)){
                     p1num.add(pnum);
+                    
+                    //check if any dots should turn green
+                    //will need to change for GUI
+                    p1_p2 = isSuperSet(p1num, p2num);
+                    p1_p3 = isSuperSet(p1num, p3num);
+                    p1_p4 = isSuperSet(p1num, p4num);
+                    
+                    //testing isSuperSet
+                    System.out.println("p1_p2 " + p1_p2 + " p1_p3 " + p1_p3 + " p1_p4 " + p1_p4);
+
+                    //if p1 has a superset for all 3 players p1 wins
+                    if(p1_p2 && p1_p3 && p1_p4) {
+                        winDetected = true;
+                    }
                 }
 
                 else {
@@ -115,7 +136,7 @@ public class Game {
 
                 System.out.println("player " + pt + " please enter a number");
                 int pnum = pAdd.nextInt();
-    
+
                 //if in range and not already in list
                 //  add to list
                 //if value not in range
@@ -124,7 +145,21 @@ public class Game {
                 // if no win continue on
                 if(pnum <= 20 & pnum >0 & !p2num.contains(pnum)){
                     p2num.add(pnum);
-                   // break;
+                    // break;
+
+                    //check if any dots should turn green
+                    //will need to change for GUI
+                    p2_p1 = isSuperSet(p2num, p1num);
+                    p2_p3 = isSuperSet(p2num, p3num);
+                    p2_p4 = isSuperSet(p2num, p4num);
+                    
+                    //testing isSuperSet
+                    System.out.println("p2_p1 " + p2_p1 + " p2_p3 " + p2_p3 + " p2_p4 " + p2_p4);
+
+                    //if p2 has a superset for all 3 players p1 wins
+                    if(p2_p1 && p2_p3 && p2_p4) {
+                        winDetected = true;
+                    }
     
                 }
                 else{
@@ -183,7 +218,19 @@ public class Game {
                 if(pnum <= 20 & pnum >0 & !p3num.contains(pnum)){
                     p3num.add(pnum);
 
-    
+                    //check if any dots should turn green
+                    //will need to change for GUI
+                    p3_p1 = isSuperSet(p3num, p1num);
+                    p3_p2 = isSuperSet(p3num, p2num);
+                    p3_p4 = isSuperSet(p3num, p4num);
+                    
+                    //testing isSuperSet
+                    System.out.println("p3_p1 " + p3_p1 + " p3_p2 " + p3_p2 + " p3_p4 " + p3_p4);
+
+                    //if p2 has a superset for all 3 players p1 wins
+                    if(p3_p1 && p3_p2 && p3_p4) {
+                        winDetected = true;
+                    }
                 }
                 else{
                     //loops until player enters a valid number
@@ -231,6 +278,8 @@ public class Game {
 
                 System.out.println("player " + pt + " please enter a number");
                 int pnum = pAdd.nextInt();
+
+                
     
                 //if in range and not already in list
                 //  add to list
@@ -241,7 +290,20 @@ public class Game {
                 if(pnum <= 20 & pnum >0 & !p4num.contains(pnum)){
                     p4num.add(pnum);
                    // break;
-    
+
+                   //check if any dots should turn green
+                    //will need to change for GUI
+                    p4_p1 = isSuperSet(p4num, p1num);
+                    p4_p2 = isSuperSet(p4num, p2num);
+                    p4_p3 = isSuperSet(p4num, p3num);
+                    
+                    //testing isSuperSet
+                    System.out.println("p4_p1 " + p4_p1 + " p4_p2 " + p4_p2 + " p4_p3 " + p4_p3);
+
+                    //if p2 has a superset for all 3 players p1 wins
+                    if(p4_p1 && p4_p2 && p4_p3) {
+                        winDetected = true;
+                    }
                 }
                 else{
                     //loops until player enters a valid number
@@ -277,5 +339,21 @@ public class Game {
 
         }
         
+    }
+
+    //3.1 check if one players numbers are a superset of another
+    //given 2 lists, x and y, return true if x is a superset of y
+    boolean isSuperSet(ArrayList<Integer> x, ArrayList<Integer> y) {
+        boolean superSetDetected = false;
+
+        //if y is > x, x cannot be a superset of y
+        //if y is empty it is a subset of x, but that breaks the game
+        if(x.size() >= y.size() && !y.isEmpty()) {
+            if(x.containsAll(y)) {
+                superSetDetected = true;
+            }
+        }
+
+        return superSetDetected;
     }
 }
