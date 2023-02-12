@@ -3,7 +3,13 @@
  */
 public class Main {
 
-    public static void main(String[] args) {
-        Match test = new Match();
-    }
+   	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+        Match match = new Match();
+        GUI gui = new GUI(match);
+        gui.setVisible(true);
+            
+        }
 }
