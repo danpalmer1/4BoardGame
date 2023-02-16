@@ -1,344 +1,114 @@
 import java.util.ArrayList;
-import java.util.Scanner; 
+import java.util.Scanner;
 
 public class Game {
+    int gameNumber;
+    boolean winDetected;
+    Player[] players = new Player[4];
+    //stores the dot values for all players. ex: playerDots[0][1] stores value for p1_p2 = true
+    //if p1 has a superset of p2s numbers. 
+    //p1_p1 p1_p2 p1_p3 p1_p4
+    //p2_p1 p2_p2 p2_p3 p2_p4 ...
+    boolean[][] playerDots = new boolean[4][4];
+    int playerTurn; //0-3 to match array of players 
 
-    ArrayList<Integer> p1Set, p2Set, p3Set, p4Set; //unique to each game
-    ArrayList<Integer> p1num, p2num, p3num, p4num; //holds players selected numbers
-    //int[] p1Set, p2Set, p3Set, p4Set; //unique to each game
+    public Game(Player p1, Player p2, Player p3, Player p4, int gameNumber) {
+        players[0] = p1;
+        players[1] = p2;
+        players[2] = p3;
+        players[3] = p4;
 
-    int gameInSet; 
-    //boolean for testing 
-    boolean winDetected = false;
+        this.gameNumber = gameNumber;
+        playerTurn = 0;
+        winDetected = false;
 
-    public Game(Player p1, Player p2, Player p3, Player p4, int gameInSet) {
-        this.gameInSet = gameInSet;
-        //output for testing
-        System.out.println("Game " + gameInSet + " out of 10 has begun.");
-        //1.3 randomly assign numbers 1-20 to each players # set
-        //1.3 randomly assign 3 numbers 1-20 to each players # set
-        //init 4 empty array lists
-        p1Set = new ArrayList<>(0); p2Set = new ArrayList<>(0); p3Set = new ArrayList<>(0); p4Set = new ArrayList<>(0);
-
-        //initalize array set for player's selected numbers
-        //should start with an empty number array. and each turn they will populate it
-        p1num = new ArrayList<>(0); p2num = new ArrayList<>(0); p3num = new ArrayList<>(0); p4num = new ArrayList<>(0);
-        ArrayList<ArrayList<Integer>> arr = new ArrayList<>(4); 
-
-        //adds number to each player set
-        arr.add(p1Set); arr.add(p2Set); arr.add(p3Set); arr.add(p4Set);
-        int listC = 1; //tracks the count of lists
-        for(ArrayList<Integer> set : arr) {
-            for(int j = 0; j < 3; j++) {
-                set.add((int)(Math.random()*20 + 1));
-            }
-            //output for testing
-           System.out.println("List " + listC + " created with " + set.toString()); 
-           listC++;
-        }
-
-        //bools represent green dots 
-        //ex: if p1 has a superset of p2s numbers then p1_p2 = true
-        boolean p1_p2, p1_p3, p1_p4 = false;
-        boolean p2_p1, p2_p3, p2_p4 = false;
-        boolean p3_p1, p3_p2, p3_p4 = false;
-        boolean p4_p1, p4_p2, p4_p3 = false;
-    
-
-
-        //if players turn allow them to select a number between 1-20 
-        int pt = 1;
-        //loops around each player until one of them detects a winner.
-        while(true){
-
-            //player one 
-            if(pt == 1){
-                System.out.println("Player " + pt + " turn!");
-                System.out.println("You set of numbers: " + p1Set);
-                System.out.println("Player " + pt + " Your current list of numbers! \n" + p1num);
-                //player add number to their set
-                
-                //testing feature with scanner
-                //replace scanner with GUI input
-                Scanner pAdd = new Scanner(System.in);
-    
-                System.out.println("player " + pt + " please enter a number");
-                int pnum = pAdd.nextInt();
-
-                //if in range and not already in list
-                //  add to list
-                //if value not in range
-                //  ask for a new number until one is valid
-                // detect if there is win with recently added number
-                // if no win continue on
-                if(pnum <= 20 & pnum >0 & !p1num.contains(pnum)){
-                    p1num.add(pnum);
-                    
-                    //check if any dots should turn green
-                    //will need to change for GUI
-                    p1_p2 = isSuperSet(p1num, p2num);
-                    p1_p3 = isSuperSet(p1num, p3num);
-                    p1_p4 = isSuperSet(p1num, p4num);
-                    
-                    //testing isSuperSet
-                    System.out.println("p1_p2 " + p1_p2 + " p1_p3 " + p1_p3 + " p1_p4 " + p1_p4);
-
-                    //if p1 has a superset for all 3 players p1 wins
-                    if(p1_p2 && p1_p3 && p1_p4) {
-                        winDetected = true;
-                    }
+        //sets values for playerDots
+        for(int i = 0; i < 4; i++) {
+            for(int j = 0; j < 4; j++) {
+                //px_px = true
+                if(i == j) {
+                    playerDots[i][j] = true;
                 }
-
                 else {
-                    //loops until player enters a valid number
-                    while(true){
-                        System.out.println(" invalid number. player " + pt + " please enter a valid number!");
-                        pnum = pAdd.nextInt();
-                        if(pnum <= 20 & pnum >0 & !p1num.contains(pnum)){
-                            p1num.add(pnum);
-                            break;
-            
-                        }
-
-
-                    }
-
+                    playerDots[i][j] = false;
                 }
-                if(winDetected){
-                    System.out.println("Player " + pt + " wins!");
-                    p1num.clear();
-                    p2num.clear();
-                    p3num.clear();
-                    p4num.clear();
-                    break;
-                    
-                }
-                //if a win is not detected
-                if(!winDetected){
-                    pt++;
-                }
-
+            }
         }
 
-    
+        generatePlayerSets();
 
+        while(!winDetected) {
+            System.out.println("Player " + (playerTurn + 1) + " turn!");
+            System.out.println("You set of numbers: " + players[playerTurn].getNumbers());
 
-            //player 2
-            if(pt == 2){
-                System.out.println("Player " + pt + " turn!");
-                System.out.println("You set of numbers: " + p2Set);
-                System.out.println("Player " + pt + " Your current list of numbers! \n" + p2num);
-                //player add number to their set
-                
-                //testing feature with scanner
-                //replace scanner with GUI input
-                Scanner pAdd = new Scanner(System.in);
+            //add new number to player set
+            //closing the scanner in the funtction closes the input stream so have to pass the scanner
+            //close after the game loop ends
+            Scanner pAdd = new Scanner(System.in);
+            addNextNumber(players[playerTurn], pAdd);
 
-                System.out.println("player " + pt + " please enter a number");
-                int pnum = pAdd.nextInt();
-
-                //if in range and not already in list
-                //  add to list
-                //if value not in range
-                //  ask for a new number until one is valid
-                // detect if there is win with recently added number
-                // if no win continue on
-                if(pnum <= 20 & pnum >0 & !p2num.contains(pnum)){
-                    p2num.add(pnum);
-                    // break;
-
-                    //check if any dots should turn green
-                    //will need to change for GUI
-                    p2_p1 = isSuperSet(p2num, p1num);
-                    p2_p3 = isSuperSet(p2num, p3num);
-                    p2_p4 = isSuperSet(p2num, p4num);
-                    
-                    //testing isSuperSet
-                    System.out.println("p2_p1 " + p2_p1 + " p2_p3 " + p2_p3 + " p2_p4 " + p2_p4);
-
-                    //if p2 has a superset for all 3 players p1 wins
-                    if(p2_p1 && p2_p3 && p2_p4) {
-                        winDetected = true;
-                    }
-    
-                }
-                else{
-                    //loops until player enters a valid number
-                    while(true){
-                        System.out.println(" invalid number. player " + pt + " please enter a valid number!");
-                        pnum = pAdd.nextInt();
-                        if(pnum <= 20 & pnum >0 & !p2num.contains(pnum)){
-                            p2num.add(pnum);
-                            break;
+            //check for supersets
+            for(int i = 0; i < 4; i++) {
+                playerDots[playerTurn][i] = isSuperSet(players[playerTurn].getNumbers(), players[i].getNumbers());
+            }
             
-                        }
-    
-    
-                    }
-    
+            //check for a win
+            winDetected = detectWin();
+            
+            if(winDetected) {
+                //if win detected add up scores
+                System.out.println("Player " + (playerTurn + 1) + " wins!");
+                calcScores(playerTurn);
+                pAdd.close();
+            }
+            //if no winner change player turn
+            else {
+                //if its p4s turn loop back to p1
+                if(playerTurn == 3) {
+                    playerTurn = 0;
                 }
-                if(winDetected){
-                    System.out.println("Player " + pt + " wins!");
-                    p1num.clear();
-                    p2num.clear();
-                    p3num.clear();
-                    p4num.clear();
-                    break;
-                    
-                }
-                //if a win is not detected
-                if(!winDetected){
-                    pt++;
+                else {
+                    playerTurn++;
                 }
             }
-
-
-
-
-            //player 3
-            if(pt == 3){
-                System.out.println("Player " + pt + " turn!");
-                System.out.println("You set of numbers: " + p3Set);
-                System.out.println("Player " + pt + " Your current list of numbers! \n" + p3num);
-                //player add number to their set
-                
-                //testing feature with scanner
-                //replace scanner with GUI input
-                Scanner pAdd = new Scanner(System.in);
-
-                System.out.println("player " + pt + " please enter a number");
-                int pnum = pAdd.nextInt();
-    
-                //if in range and not already in list
-                //  add to list
-                //if value not in range
-                //  ask for a new number until one is valid
-                // detect if there is win with recently added number
-                // if no win continue on
-                if(pnum <= 20 & pnum >0 & !p3num.contains(pnum)){
-                    p3num.add(pnum);
-
-                    //check if any dots should turn green
-                    //will need to change for GUI
-                    p3_p1 = isSuperSet(p3num, p1num);
-                    p3_p2 = isSuperSet(p3num, p2num);
-                    p3_p4 = isSuperSet(p3num, p4num);
-                    
-                    //testing isSuperSet
-                    System.out.println("p3_p1 " + p3_p1 + " p3_p2 " + p3_p2 + " p3_p4 " + p3_p4);
-
-                    //if p2 has a superset for all 3 players p1 wins
-                    if(p3_p1 && p3_p2 && p3_p4) {
-                        winDetected = true;
-                    }
-                }
-                else{
-                    //loops until player enters a valid number
-                    while(true){
-                        System.out.println(" invalid number. player " + pt + " please enter a valid number!");
-                        pnum = pAdd.nextInt();
-                        if(pnum <= 20 & pnum >0 & !p3num.contains(pnum)){
-                            p3num.add(pnum);
-                            break;
-            
-                        }
-    
-    
-                    }
-    
-                }
-                if(winDetected){
-                    System.out.println("Player " + pt + " wins!");
-                    p1num.clear();
-                    p2num.clear();
-                    p3num.clear();
-                    p4num.clear();
-                    break;
-                    
-                }
-                //if a win is not detected
-                if(!winDetected){
-                    pt++;
-                }
-            }
-
-
-
-
-            //player 4
-            if(pt == 4){
-                System.out.println("Player " + pt + " turn!");
-                System.out.println("You set of numbers: " + p4Set);
-                System.out.println("Player " + pt + " Your current list of numbers! \n" + p4num);
-                //player add number to their set
-                
-                //testing feature with scanner
-                //replace scanner with GUI input
-                Scanner pAdd = new Scanner(System.in);
-
-                System.out.println("player " + pt + " please enter a number");
-                int pnum = pAdd.nextInt();
-
-                
-    
-                //if in range and not already in list
-                //  add to list
-                //if value not in range
-                //  ask for a new number until one is valid
-                // detect if there is win with recently added number
-                // if no win continue on
-                if(pnum <= 20 & pnum >0 & !p4num.contains(pnum)){
-                    p4num.add(pnum);
-                   // break;
-
-                   //check if any dots should turn green
-                    //will need to change for GUI
-                    p4_p1 = isSuperSet(p4num, p1num);
-                    p4_p2 = isSuperSet(p4num, p2num);
-                    p4_p3 = isSuperSet(p4num, p3num);
-                    
-                    //testing isSuperSet
-                    System.out.println("p4_p1 " + p4_p1 + " p4_p2 " + p4_p2 + " p4_p3 " + p4_p3);
-
-                    //if p2 has a superset for all 3 players p1 wins
-                    if(p4_p1 && p4_p2 && p4_p3) {
-                        winDetected = true;
-                    }
-                }
-                else{
-                    //loops until player enters a valid number
-                    while(true){
-                        System.out.println(" invalid number. player " + pt + " please enter a valid number!");
-                        pnum = pAdd.nextInt();
-                        if(pnum <= 20 & pnum >0 & !p4num.contains(pnum)){
-                            p4num.add(pnum);
-                            break;
-            
-                        }
-    
-    
-                    }
-    
-                }
-                if(winDetected){
-                    System.out.println("Player " + pt + " wins!");
-                    p1num.clear();
-                    p2num.clear();
-                    p3num.clear();
-                    p4num.clear();
-                    break;
-                    
-                }
-                //if a win is not detected
-                if(!winDetected){
-                    //for player 4 it will change back to 1 so it can loop back to player one
-                    pt = 1;
-                }
-            }
-            //break if there is a win from one of players
-
         }
-        
+    }
+
+    private void generatePlayerSets() {
+        for (Player p : players) {
+            while(p.getNumbers().size() < 3) {
+                int toAdd = (int)(Math.random() * 20 + 1);
+                //this prevents duplicate numbers
+                if(!p.getNumbers().contains(toAdd)) {
+                    p.addNumber(toAdd);
+                }
+            }
+            System.out.println(p.getNumbers());
+        }
+    }
+
+    //adds the number inputted to players set
+    private void addNextNumber(Player player, Scanner pAdd) {
+        System.out.println("player " + (playerTurn + 1) + " please enter a number: ");
+        int pnum = pAdd.nextInt();
+
+        boolean numAccepted = false;
+
+        //if in range and not already in list
+        //  add to list
+        //if value not in range
+        //  ask for a new number until one is valid
+        while(!numAccepted) {
+            if(pnum <= 20 & pnum > 0 & !player.getNumbers().contains(pnum)){
+                player.addNumber(pnum);
+                numAccepted = true;
+            }
+            
+            else {
+                System.out.println("Number must be less than 20 and not already in your list: ");
+                pnum = pAdd.nextInt();
+            }
+        }
     }
 
     //3.1 check if one players numbers are a superset of another
@@ -356,4 +126,37 @@ public class Game {
 
         return superSetDetected;
     }
-}
+
+    private boolean detectWin() {
+        boolean tempWin = true;
+        int counter = 0;
+            while(tempWin && counter < 4) {
+                if(playerDots[playerTurn][counter] == true) {
+                    tempWin = true;
+                    counter++;
+                }
+                else {
+                    tempWin = false;
+                }
+            }
+        return tempWin;
+    }
+
+    private void calcScores(int winner) {
+        //winner gets 10 pts, everyone else gets the sum of their numbers
+        for(int i = 0; i < 4; i++) {
+            if(i == winner) {
+                players[i].addScore(10);
+            }
+            else {
+                int sum = 0;
+                ArrayList<Integer> nums = players[i].getNumbers();
+                for (Integer x : nums) {
+                    sum += x;
+                }
+
+                players[i].addScore(sum);
+            }
+        }
+    }
+ }
