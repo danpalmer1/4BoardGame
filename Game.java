@@ -2,27 +2,34 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
-    int gameNumber;
-    boolean winDetected;
-    Player[] players = new Player[4];
+    
+    int gameNumber; //game out of match set of 10
+    boolean winDetected; //true= ? false= ?
+    Player[] players = new Player[4]; //array of 4 players
+
     //stores the dot values for all players. ex: playerDots[0][1] stores value for p1_p2 = true
     //if p1 has a superset of p2s numbers. 
     //p1_p1 p1_p2 p1_p3 p1_p4
     //p2_p1 p2_p2 p2_p3 p2_p4 ...
-    boolean[][] playerDots = new boolean[4][4];
+    boolean[][] playerDots = new boolean[4][4]; //4x4 array to represent dots
     int playerTurn; //0-3 to match array of players 
 
+    /* constructor method */
     public Game(Player p1, Player p2, Player p3, Player p4, int gameNumber) {
+        //insert players into player set
         players[0] = p1;
         players[1] = p2;
         players[2] = p3;
         players[3] = p4;
 
+        //set game #
         this.gameNumber = gameNumber;
+        
+        //start with player 1
         playerTurn = 0;
-        winDetected = false;
+        winDetected = false; //initialize winDetected
 
-        //sets values for playerDots
+        //initialize playerDots array with values
         for(int i = 0; i < 4; i++) {
             for(int j = 0; j < 4; j++) {
                 //px_px = true
@@ -35,12 +42,31 @@ public class Game {
             }
         }
 
-        generatePlayerSets();
+        //generate new numbers for each player
+        generatePlayerNumberSets();
+    } //end of constructor
 
-        while(!winDetected) {
+
+    //generate 3 numbers for each player's number set
+    private void generatePlayerNumberSets() {
+        for (Player p : players) { //for every player in the player arr
+            while(p.numbers.size() < 3) { //while numbers list is less than 3 
+                int toAdd = (int)(Math.random() * 20 + 1); //random num 1-20
+                //check if random # is in set already
+                if(!p.getNumbers().contains(toAdd)) {
+                    p.addNumber(toAdd);
+                }
+            }
+            //System.out.println(p.getNumbers()); //for testing
+        }
+    }
+
+    public void playGame() {
+        while(!winDetected) { //while loop until game is won
+            //print player #, their number set and the game board
             System.out.println("Player " + (playerTurn + 1) + " turn!");
-            System.out.println("You set of numbers: " + players[playerTurn].getNumbers());
-
+            System.out.print("You set of numbers: " + players[playerTurn].getNumbers());
+            printPlayerDots();
             //add new number to player set
             //closing the scanner in the funtction closes the input stream so have to pass the scanner
             //close after the game loop ends
@@ -71,25 +97,13 @@ public class Game {
                     playerTurn++;
                 }
             }
-        }
-    }
-
-    private void generatePlayerSets() {
-        for (Player p : players) {
-            while(p.getNumbers().size() < 3) {
-                int toAdd = (int)(Math.random() * 20 + 1);
-                //this prevents duplicate numbers
-                if(!p.getNumbers().contains(toAdd)) {
-                    p.addNumber(toAdd);
-                }
-            }
-            System.out.println(p.getNumbers());
+            System.out.println();
         }
     }
 
     //adds the number inputted to players set
     private void addNextNumber(Player player, Scanner pAdd) {
-        System.out.println("player " + (playerTurn + 1) + " please enter a number: ");
+        System.out.print("Player " + (playerTurn + 1) + " please enter a number: ");
         int pnum = pAdd.nextInt();
 
         boolean numAccepted = false;
@@ -127,6 +141,7 @@ public class Game {
         return superSetDetected;
     }
 
+    //det
     private boolean detectWin() {
         boolean tempWin = true;
         int counter = 0;
@@ -142,15 +157,34 @@ public class Game {
         return tempWin;
     }
 
+
+    //print a console representation of the playerDots array
+    //2D 4x4 [3,0] [3,1] [3,2] [3,3]
+    //       [2,0] [2,1] [2,2] [2,3]
+    //       [1,0] [1,1] [1,2] [1,3]
+    //       [0,0] [0,1] [0,2] [0,3]   
+    private void printPlayerDots() {
+        for(int i = playerDots.length-1; i >= 0; i--) {
+            //each row
+            System.out.println();
+            for(int k = 0; k < playerDots[i].length; k++) {
+                System.out.print(" [" + playerDots[i][k] + "] ");
+            }
+        }
+        System.out.println();
+    }
+
     private void calcScores(int winner) {
         //winner gets 10 pts, everyone else gets the sum of their numbers
         for(int i = 0; i < 4; i++) {
+            //add 10 to winner score
             if(i == winner) {
                 players[i].addScore(10);
             }
             else {
                 int sum = 0;
                 ArrayList<Integer> nums = players[i].getNumbers();
+                //calculate sum of players number set
                 for (Integer x : nums) {
                     sum += x;
                 }
@@ -159,4 +193,5 @@ public class Game {
             }
         }
     }
+
  }
