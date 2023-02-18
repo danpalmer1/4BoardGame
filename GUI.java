@@ -156,7 +156,7 @@ public class GUI extends JFrame {
     btnGuess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
         //action listener for guess button
-
+				
 			}
 		});
 		menu.add(btnGuess);
