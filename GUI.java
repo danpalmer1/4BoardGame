@@ -18,7 +18,7 @@ public class GUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-  public Match match;
+  	public Match match;
 	private JButton btnGuess;
 
 
@@ -26,7 +26,7 @@ public class GUI extends JFrame {
 	 * Create the frame.
 	 */
 	public GUI(Match m) {
-    this.match = m;
+    	this.match = m;
 		setTitle("4 Board Game");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -44,19 +44,19 @@ public class GUI extends JFrame {
 		lblNewLabel_6.setHorizontalAlignment(SwingConstants.CENTER);
 		board.add(lblNewLabel_6);
 		
-    Icon icoDA = new ImageIcon("reddot.png");
+    	Icon icoDA = new ImageIcon("reddot.png");
 		JButton btnDA = new JButton(icoDA);
 		board.add(btnDA);
 		
-    Icon icoDB = new ImageIcon("reddot.png");
+    	Icon icoDB = new ImageIcon("reddot.png");
 		JButton btnDB = new JButton(icoDB);
 		board.add(btnDB);
 		
-    Icon icoDC = new ImageIcon("reddot.png");
+    	Icon icoDC = new ImageIcon("reddot.png");
 		JButton btnDC = new JButton(icoDC);
 		board.add(btnDC);
 		
-    Icon icoDD = new ImageIcon("reddot.png");
+    	Icon icoDD = new ImageIcon("reddot.png");
 		JButton btnDD = new JButton(icoDD);
 		board.add(btnDD);
 		
@@ -64,19 +64,19 @@ public class GUI extends JFrame {
 		lblNewLabel_9.setHorizontalAlignment(SwingConstants.CENTER);
 		board.add(lblNewLabel_9);
 		
-    Icon icoCA = new ImageIcon("reddot.png");
+    	Icon icoCA = new ImageIcon("reddot.png");
 		JButton btnCA = new JButton(icoCA);
 		board.add(btnCA);
 		
-    Icon icoCB = new ImageIcon("reddot.png");
+    	Icon icoCB = new ImageIcon("reddot.png");
 		JButton btnCB = new JButton(icoCB);
 		board.add(btnCB);
 		
-    Icon icoCC = new ImageIcon("reddot.png");
+    	Icon icoCC = new ImageIcon("reddot.png");
 		JButton btnCC = new JButton(icoCC);
 		board.add(btnCC);
 		
-    Icon icoCD = new ImageIcon("reddot.png");
+   	 	Icon icoCD = new ImageIcon("reddot.png");
 		JButton btnCD = new JButton(icoCD);
 		board.add(btnCD);
 		
@@ -84,19 +84,19 @@ public class GUI extends JFrame {
 		lblNewLabel_8.setHorizontalAlignment(SwingConstants.CENTER);
 		board.add(lblNewLabel_8);
 		
-    Icon icoBA = new ImageIcon("reddot.png");
+    	Icon icoBA = new ImageIcon("reddot.png");
 		JButton btnBA = new JButton(icoBA);
 		board.add(btnBA);
 		
-    Icon icoBB = new ImageIcon("reddot.png");
+    	Icon icoBB = new ImageIcon("reddot.png");
 		JButton btnBB = new JButton(icoBB);
 		board.add(btnBB);
 		
-    Icon icoBC = new ImageIcon("reddot.png");
+    	Icon icoBC = new ImageIcon("reddot.png");
 		JButton btnBC = new JButton(icoBC);
 		board.add(btnBC);
 		
-    Icon icoBD = new ImageIcon("reddot.png");
+    	Icon icoBD = new ImageIcon("reddot.png");
 		JButton btnBD = new JButton(icoBD);
 		board.add(btnBD);
 		
@@ -104,19 +104,19 @@ public class GUI extends JFrame {
 		lblNewLabel_7.setHorizontalAlignment(SwingConstants.CENTER);
 		board.add(lblNewLabel_7);
 		
-    Icon icoAA = new ImageIcon("greendot.png");
+    	Icon icoAA = new ImageIcon("greendot.png");
 		JButton btnAA = new JButton(icoAA);
 		board.add(btnAA);
 		
-    Icon icoAB = new ImageIcon("reddot.png");
+    	Icon icoAB = new ImageIcon("reddot.png");
 		JButton btnAB = new JButton(icoAB);
 		board.add(btnAB);
 		
-    Icon icoAC = new ImageIcon("reddot.png");
+    	Icon icoAC = new ImageIcon("reddot.png");
 		JButton btnAC = new JButton(icoAC);
 		board.add(btnAC);
 		
-    Icon icoAD = new ImageIcon("reddot.png");
+  		Icon icoAD = new ImageIcon("reddot.png");
 		JButton btnAD = new JButton(icoAD);
 		board.add(btnAD);
 		
@@ -142,7 +142,7 @@ public class GUI extends JFrame {
 		JPanel menu = new JPanel();
 		contentPane.add(menu, BorderLayout.SOUTH);
 
-    JLabel lblGameInMatch = new JLabel("(1/10)");
+   		JLabel lblGameInMatch = new JLabel("(1/10)");
 		menu.add(lblGameInMatch);
 		
 		JLabel lblPrompt0 = new JLabel("Enter a Number: ");
@@ -152,8 +152,8 @@ public class GUI extends JFrame {
 		menu.add(textField);
 		textField.setColumns(10);
 
-    btnGuess = new JButton("Guess");
-    btnGuess.addActionListener(new ActionListener() {
+		btnGuess = new JButton("Guess");
+    	btnGuess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
         //action listener for guess button
 				
@@ -166,8 +166,7 @@ public class GUI extends JFrame {
 		
 		JLabel lblUserSet = new JLabel("{ }");
 		menu.add(lblUserSet);
-	}
+		setVisible(true);
+	} //end of constructor
 
-
-
-}
+} //end of class
